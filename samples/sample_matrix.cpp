@@ -11,21 +11,31 @@
 
 void main()
 {
-  TMatrix<int> a(5), b(5), c(5);
-  int i, j;
-
-  setlocale(LC_ALL, "Russian");
-  cout << "Тестирование программ поддержки представления треугольных матриц"
-    << endl;
-  for (i = 0; i < 5; i++)
-    for (j = i; j < 5; j++ )
+    int n, i;
+    setlocale(LC_ALL, "Russian");
+    cout << "Тестирование программ поддержки представления треугольных матриц" << endl;
+    cout << "Введите размер матриц:" << endl;
+    cin >> n;
+    TMatrix<int> a(n), b(n);
+    cout << "Заполните матрицу A:" << endl;
+    cin >> a;
+    cout << "Заполните матрицу B:" << endl;
+    cin >> b;
+    while (i != 0)
     {
-      a[i][j] =  i * 10 + j;
-      b[i][j] = (i * 10 + j) * 100;
+        cout << "Введите номер операции, которую хотите выполнить:" << endl;
+        cout << "1 - сложение матриц" << endl;
+        cout << "2 - вычитание матриц" << endl;
+        cout << "0 - выход из программы" << endl;
+        cin >> i;
+        if (i == 0) break;
+        if (i == 1)
+            cout << "A + B = " << endl << a + b << endl;
+        if (i == 2)
+            cout << "A - B = " << endl << a - b << endl;
+        if (i != 1 && i != 2)
+            cout << "Недопустимый номер операции" << endl;
     }
-  c = a + b;
-  cout << "Matrix a = " << endl << a << endl;
-  cout << "Matrix b = " << endl << b << endl;
-  cout << "Matrix c = a + b" << endl << c << endl;
+
 }
 //---------------------------------------------------------------------------
