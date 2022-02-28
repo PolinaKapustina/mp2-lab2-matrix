@@ -170,23 +170,64 @@ TVector<ValType> TVector<ValType>::operator*(const ValType &val)
 template <class ValType> // сложение
 TVector<ValType> TVector<ValType>::operator+(const TVector<ValType> &v)
 {
-    if (Size != v.Size)
+    if (Size != v.Size || StartIndex != v.StartIndex)
         throw ("Adding vectors of different sizes is not allowed");
-    TVector temp(Size, StartIndex);
-    for (int i = 0; i < temp.Size; i++)
-        temp.pVector[i] = pVector[i] + v.pVector[i];
-    return temp;
+    if (StartIndex < v.StartIndex)
+    {
+        TVector<ValType> temp = *this;
+        for (int i = 0; i < v.Size; i++)
+        {
+            temp.pVector[i + v.StartIndex - StartIndex] = temp.pVector[i + v.StartIndex - StartIndex] + v.pVector[i];
+        }
+        return temp;
+    }
+    else
+    {
+        TVector<ValType> temp = v;
+        for (int i = 0; i < Size; i++)
+        {
+            temp.pVector[i + StartIndex - v.StartIndex] = temp.pVector[i + StartIndex - v.StartIndex] + pVector[i];
+        }
+        return temp;
+    }
 } /*-------------------------------------------------------------------------*/
 
 template <class ValType> // вычитание
 TVector<ValType> TVector<ValType>::operator-(const TVector<ValType> &v)
 {
-    if (Size != v.Size)
+    if (Size != v.Size || StartIndex != v.StartIndex)
         throw ("Subtraction of vectors of different sizes is not allowed");
-     TVector temp(Size, StartIndex);
-    for (int i = 0; i < temp.Size; i++)
-        temp.pVector[i] = pVector[i] - v.pVector[i];
-    return temp;
+    if (StartIndex < v.StartIndex)
+    {
+        TVector<ValType> temp = *this;
+        for (int i = 0; i < v.Size; i++)
+        {
+            temp.pVector[i + v.StartIndex - StartIndex] = temp.pVector[i + v.StartIndex - StartIndex] - v.pVector[i];
+        }
+        return temp;
+    }
+    if (StartIndex > v.StartIndex)
+    {
+        TVector<ValType> temp(v);
+        for (int i = 0; i < Size; i++)
+        {
+            temp.pVector[i + StartIndex - v.StartIndex] = pVector[i] - temp.pVector[i + StartIndex - v.StartIndex];
+        }
+        for (int i = 0; i < StartIndex - v.StartIndex; i++)
+        {
+            temp.pVector[i] = temp.pVector[i] - temp.pVector[i] - temp.pVector[i];
+        }
+        return temp;
+    }
+    if (Size == v.Size)
+    {
+        TVector<ValType> temp(Size, StartIndex);
+        for (int i = 0; i < Size; i++)
+        {
+            temp.pVector[i] = pVector[i] - v.pVector[i];
+        }
+        return temp;
+    }
 } /*-------------------------------------------------------------------------*/
 
 template <class ValType> // скалярное произведение
@@ -259,39 +300,19 @@ TMatrix<ValType>::TMatrix(const TVector<TVector<ValType> > &mt):
 template <class ValType> // сравнение
 bool TMatrix<ValType>::operator==(const TMatrix<ValType> &mt) const
 {
-    if (&mt == this)
-        return true;
-    if (Size != mt.Size)
-        return false;
-    for (int i = 0; i < Size; i++)
-    {
-        if (pVector[i] != mt.pVector[i])
-            return false;
-    }
-    return true;
+    return (TMatrix<ValType>(TVector<TVector<ValType>>:: operator==(mt)));
 } /*-------------------------------------------------------------------------*/
 
 template <class ValType> // сравнение
 bool TMatrix<ValType>::operator!=(const TMatrix<ValType> &mt) const
 {
-    return !(*this == mt);
+    return (TMatrix<ValType>(TVector<TVector<ValType>>:: operator!=(mt)));
 } /*-------------------------------------------------------------------------*/
 
 template <class ValType> // присваивание
 TMatrix<ValType>& TMatrix<ValType>::operator=(const TMatrix<ValType> &mt)
 {
-    if (this == &mt)
-        return *this;
-    if (Size != mt.Size)
-    {
-        Size = mt.Size;
-        delete[] pVector;
-        pVector = new TVector<ValType>[Size];
-    }
-    StartIndex = mt.StartIndex;
-    for (int i = 0; i < mt.Size; i++)
-        pVector[i] = mt.pVector[i];
-    return *this;
+    return(TMatrix<ValType>(TVector<TVector<ValType>>:: operator=(mt)));
 } /*-------------------------------------------------------------------------*/
 
 template <class ValType> // сложение

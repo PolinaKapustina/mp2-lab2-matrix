@@ -222,3 +222,20 @@ TEST(TVector, cant_multiply_vectors_with_not_equal_size)
 	ASSERT_ANY_THROW(v1 * v2);
 }
 
+TEST(TVector, can_add_any_vectors_with_equal_size)
+{
+	TVector<int> v1(5);
+	TVector<int> v2(5);
+	TVector<int> v3(5);
+	v2[0] += 3;
+	v2[4] += 2;
+	v3[0] += 4;
+	v3[4] += 5;
+	TVector<int> standart(v1);
+	for (int i = 0; i < 5; i++)
+		standart[i] = standart[i]+ v2[i]+v3[i];
+	EXPECT_EQ(standart, v1 + v2 + v3);
+}
+
+
+

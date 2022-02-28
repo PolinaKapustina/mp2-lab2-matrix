@@ -161,3 +161,27 @@ TEST(TMatrix, cant_subtract_matrixes_with_not_equal_size)
 	ASSERT_ANY_THROW(m2 - m1);
 }
 
+TEST(TMatrix, cant_subtract_matrixes_with_not_equal_size)
+{
+	TMatrix<int> m1(5);
+	TMatrix<int> m2(7);
+	ASSERT_ANY_THROW(m2 - m1);
+}
+
+TEST(TMatrix, can_add_any_matrices_with_equal_size)
+{
+	TMatrix<int> m1(5);
+	TMatrix<int> m2(5);
+	TMatrix<int> m3(5);
+	for (int i = 0; i < 5; i++)
+		for (int j = i; j < 5; j++)
+		{
+			m1[i][j] = 3;
+			m2[i][j] = 4;
+			m3[i][j] = 5;
+		}
+	TMatrix<int> standart(m1);
+	for (int i = 0; i < 5; i++)
+		standart[i] = m2[i] + standart[i]+m3[i];
+	EXPECT_EQ(standart, (m1 + m2 + m3));
+}

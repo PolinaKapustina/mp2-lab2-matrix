@@ -11,8 +11,8 @@
 
 void main()
 {
-    int n,
-    int i = 0;
+    int n;
+    int i = -1;
     setlocale(LC_ALL, "Russian");
     cout << "Тестирование программ поддержки представления треугольных матриц" << endl;
     cout << "Введите размер матриц:" << endl;
